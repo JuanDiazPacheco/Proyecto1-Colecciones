@@ -9,6 +9,7 @@ import Ordenamientos.MezclaNatural;
 import Ordenamientos.OrdenamientoExterno;
 import Ordenamientos.Polifase;
 import Ordenamientos.Radix;
+import Ordenamientos.RadixExterno;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -69,6 +70,7 @@ public class PrincipalController implements Initializable {
         // Se configura el filechooser
         configureFileChooser(fileChooser);
         directoryChooser.setInitialDirectory(new File("src"));
+        RadixExterno.setDirectorio(null);
 
         // Se desactiva la edicion de los pathfield
         pathField.setEditable(false);
@@ -110,6 +112,7 @@ public class PrincipalController implements Initializable {
             // Manda a llamar al método
             pathDestinoField.setText(directorioDestino.getAbsolutePath());
             OrdenamientoExterno.setDirectorio(directorioDestino);
+            RadixExterno.setDirectorio(directorioDestino);
             verificarSeleccionados();
         }
     }
@@ -130,10 +133,13 @@ public class PrincipalController implements Initializable {
             algoritmoElegido = algoritmoCB.getSelectionModel().getSelectedItem();
             criterioElegido = criterioCB.getSelectionModel().getSelectedItem();
 
-            if (criterioElegido.equals("Ascendente"))
+            if (criterioElegido.equals("Ascendente")) {
                 comparator = new AscendingOrder();
-            else
+                RadixExterno.setIsAscending(true);
+            } else {
                 comparator = new DescendingOrder();
+                RadixExterno.setIsAscending(false);
+            }
 
             // Polifase.ordenar(origen, 4);
 
@@ -145,7 +151,8 @@ public class PrincipalController implements Initializable {
                     MezclaNatural.ordenar(fileOrigen, comparator);
                     break;
                 case "Radix":
-                    Radix.ordenar(fileOrigen, comparator, directorioDestino);
+                    // Radix.ordenar(fileOrigen, comparator, directorioDestino);
+                    RadixExterno.ordenar(fileOrigen);
                     break;
             }
         } else {
